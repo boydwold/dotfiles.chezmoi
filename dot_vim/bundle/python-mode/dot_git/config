@@ -1,0 +1,43 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[submodule]
+	active = .
+[remote "origin"]
+	url = https://github.com/klen/python-mode.git
+	fetch = +refs/heads/develop:refs/remotes/origin/develop
+[branch "develop"]
+	remote = origin
+	merge = refs/heads/develop
+[submodule "submodules/appdirs"]
+	url = https://github.com/ActiveState/appdirs.git
+[submodule "submodules/astroid"]
+	url = https://github.com/PyCQA/astroid
+[submodule "submodules/autopep8"]
+	url = https://github.com/hhatto/autopep8
+[submodule "submodules/mccabe"]
+	url = https://github.com/PyCQA/mccabe
+[submodule "submodules/pycodestyle"]
+	url = https://github.com/PyCQA/pycodestyle
+[submodule "submodules/pydocstyle"]
+	url = https://github.com/PyCQA/pydocstyle
+[submodule "submodules/pyflakes"]
+	url = https://github.com/PyCQA/pyflakes
+[submodule "submodules/pylama"]
+	url = https://github.com/klen/pylama
+[submodule "submodules/pylint"]
+	url = https://github.com/PyCQA/pylint
+[submodule "submodules/pytoolconfig"]
+	url = https://github.com/bagel897/pytoolconfig.git
+[submodule "submodules/rope"]
+	url = https://github.com/python-rope/rope
+[submodule "submodules/snowball_py"]
+	url = https://github.com/diraol/snowball_py
+[submodule "submodules/toml"]
+	url = https://github.com/uiri/toml.git
+[submodule "submodules/tomli"]
+	url = https://github.com/hukkin/tomli.git

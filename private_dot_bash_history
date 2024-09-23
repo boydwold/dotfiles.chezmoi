@@ -1,0 +1,52 @@
+l
+gh
+where gh
+pjr
+exit
+which gh
+which kubectl
+kubectl
+exit
+exit
+nix-shell -i zsh
+nix-shell --helkp
+nix-shell --help
+exit
+nix-shell --run $SHELL
+exit
+l
+ls
+ls -al
+exit
+node -v
+exit
+htop
+node -v
+cat shell.nix 
+exit
+exit
+wxit
+exit
+type curl
+type git
+nix develop "https://flakehub.com/f/DeterminateSystems/zero-to-nix/*#hook"
+nix develop github:DeterminateSystems/zero-to-nix#hook
+exit
+echo $FUNNY_JOKE
+exit
+nix develop github:DeterminateSystems/zero-to-nix#hook
+exit
+type ghc
+ghc
+ghx --version
+ghc --version
+exit
+type python
+exit
+type ghc
+exit
+type curl
+type git
+l
+ls
+exit
