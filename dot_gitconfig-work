@@ -1,0 +1,12 @@
+# Work identity for ~/projects/work-lendos/
+[user]
+    email = 107568704+rpcaptain@users.noreply.github.com
+    name = Boyd Wold
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7xS8O8m3BY/Za2uD4pd8YLwMmoQpaM2YLwvpzztp5P
+
+[commit]
+    gpgsign = true
+
+# Route to work SSH key
+[url "git@github-work:"]
+    insteadOf = git@github.com:

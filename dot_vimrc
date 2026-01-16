@@ -1,0 +1,50 @@
+" Basic Vim config for learning
+
+" Enable syntax highlighting
+syntax on
+
+" Enable filetype detection and plugins
+filetype plugin indent on
+
+" Show line numbers
+set number
+
+" Highlight current line
+set cursorline
+
+" Show matching brackets
+set showmatch
+
+" Search settings
+set hlsearch      " Highlight search results
+set incsearch     " Incremental search
+set ignorecase    " Case insensitive...
+set smartcase     " ...unless uppercase used
+
+" Indentation
+set tabstop=4     " Tab width
+set shiftwidth=4  " Indent width
+set expandtab     " Spaces instead of tabs
+set autoindent    " Auto indent new lines
+
+" Better backspace
+set backspace=indent,eol,start
+
+" Show command in bottom bar
+set showcmd
+
+" Visual autocomplete for command menu
+set wildmenu
+
+" Disable annoying sounds
+set noerrorbells
+set visualbell
+
+" Enable mouse support
+set mouse=a
+
+" Use system clipboard
+set clipboard=unnamed
+
+" Color scheme (built-in)
+colorscheme desert

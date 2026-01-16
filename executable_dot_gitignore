@@ -1,24 +1,50 @@
-# Compiled Python files
-*.pyc
-
-# Folder view configuration files
+# macOS
 .DS_Store
+._*
+
+# Windows
+Thumbs.db
 desktop.ini
 
-# Thumbnail cache files
-Thumbs.db
-
-# Installed NPM modules
-node_modules
-npm-debug.log
-yarn-error.log
-
-# Installed Bower packages
-bower_components
-
-# Editor`s configs
+# Editors
+.idea/
 *.sublime-*
 .tern-project
+*.swp
+*.swo
+*~
+.vscode/*.log
 
-# Ignore Westorm files
-.idea
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Python
+*.pyc
+__pycache__/
+.venv/
+
+# DAML
+.daml/
+
+# Environment & secrets
+.env
+.env.local
+.env*.local
+.envrc
+
+# Build output
+dist/
+build/
+coverage/
+out/
+
+# Logs & temp
+*.log
+*.tmp
+*.bak
+
+# Legacy
+bower_components/

@@ -1,0 +1,467 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Clean two-line format with infrastructure safety indicators
+format = """
+$directory\
+${custom.infra_danger}\
+${custom.infra_caution}\
+${custom.infra_safe}\
+${custom.infra_mismatch}\
+$git_branch\
+$git_status\
+$golang\
+$nodejs\
+$daml\
+$rust\
+$python\
+$fill\
+$cmd_duration\
+$line_break\
+$character"""
+
+command_timeout = 10000
+
+# Minimal palette - danger levels for infrastructure
+palette = 'platform'
+
+[palettes.platform]
+# Danger levels
+danger = '#ff5555'      # Red - production
+danger_fg = '#ffffff'
+caution = '#f1fa8c'     # Yellow - staging
+caution_fg = '#282a36'
+safe = '#50fa7b'        # Green - dev/local
+safe_fg = '#282a36'
+# Base colors
+text = '#f8f8f2'
+muted = '#6272a4'
+
+# === INFRASTRUCTURE CONTEXT (color-coded by danger level) ===
+
+[kubernetes]
+disabled = true
+
+[aws]
+disabled = true
+
+# DANGER (prod/management) - red background
+[custom.infra_danger]
+command = '''
+K8S_ICON="󱃾"
+AWS_ICON=" "
+
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+k8s_ns=$(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+if [ -n "$aws_profile" ]; then
+  aws_account="${aws_profile%%/*}"
+  aws_role="${aws_profile##*/}"
+  case "$aws_role" in
+    AWSAdministratorAccess) aws_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) aws_role="View" ;;
+    AWSPowerUserAccess) aws_role="Power" ;;
+    SREOperatorAccess) aws_role="Ops" ;;
+    EngineeringReadOnlyAccess) aws_role="EngView" ;;
+    TiltEngineerAccess) aws_role="Tilt" ;;
+  esac
+fi
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+
+if [ -n "$k8s_role" ]; then
+  case "$k8s_role" in
+    AWSAdministratorAccess) k8s_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) k8s_role="View" ;;
+    AWSPowerUserAccess) k8s_role="Power" ;;
+    SREOperatorAccess) k8s_role="Ops" ;;
+    EngineeringReadOnlyAccess) k8s_role="EngView" ;;
+    TiltEngineerAccess) k8s_role="Tilt" ;;
+  esac
+fi
+
+format_account() {
+  local acct="$1"
+  case "$acct" in
+    *-prod) echo "${acct%-prod}:prod" ;;
+    *-production) echo "${acct%-production}:prod" ;;
+    *-stg) echo "${acct%-stg}:stg" ;;
+    *-staging) echo "${acct%-staging}:stg" ;;
+    *-dev) echo "${acct%-dev}:dev" ;;
+    *-management) echo "${acct%-management}:mgmt" ;;
+    *) echo "$acct" ;;
+  esac
+}
+
+if [ -n "$k8s_ctx" ] && [ -n "$aws_profile" ]; then
+  if [ "$k8s_account" = "$aws_account" ]; then
+    display=$(format_account "$aws_account")
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $AWS_ICON $aws_role@$display:$k8s_ns" || echo "$K8S_ICON $AWS_ICON $aws_role@$display"
+  fi
+elif [ -n "$k8s_ctx" ]; then
+  display=$(format_account "$k8s_account")
+  if [ -n "$k8s_role" ]; then
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $k8s_role@$display:$k8s_ns" || echo "$K8S_ICON $k8s_role@$display"
+  else
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $display:$k8s_ns" || echo "$K8S_ICON $display"
+  fi
+elif [ -n "$aws_profile" ]; then
+  display=$(format_account "$aws_account")
+  echo "$AWS_ICON $aws_role@$display"
+fi
+'''
+when = '''
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+aws_account="${aws_profile%%/*}"
+aws_role="${aws_profile##*/}"
+
+if [ -n "$k8s_ctx" ] && [ -n "$aws_profile" ]; then
+  [ "$k8s_account" != "$aws_account" ] && exit 1
+  [ -n "$k8s_role" ] && [ "$k8s_role" != "$aws_role" ] && exit 1
+fi
+
+ctx="${k8s_account:-$aws_account}"
+[ -z "$ctx" ] && exit 1
+case "$ctx" in
+  *-prod*|*-production*|*-prd*|*-management*|*management*) exit 0 ;;
+  *) exit 1 ;;
+esac
+'''
+format = '[$output](bold fg:danger_fg bg:danger) '
+
+# CAUTION (staging) - yellow background
+[custom.infra_caution]
+command = '''
+K8S_ICON="󱃾"
+AWS_ICON=" "
+
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+k8s_ns=$(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+if [ -n "$aws_profile" ]; then
+  aws_account="${aws_profile%%/*}"
+  aws_role="${aws_profile##*/}"
+  case "$aws_role" in
+    AWSAdministratorAccess) aws_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) aws_role="View" ;;
+    AWSPowerUserAccess) aws_role="Power" ;;
+    SREOperatorAccess) aws_role="Ops" ;;
+    EngineeringReadOnlyAccess) aws_role="EngView" ;;
+    TiltEngineerAccess) aws_role="Tilt" ;;
+  esac
+fi
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+
+if [ -n "$k8s_role" ]; then
+  case "$k8s_role" in
+    AWSAdministratorAccess) k8s_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) k8s_role="View" ;;
+    AWSPowerUserAccess) k8s_role="Power" ;;
+    SREOperatorAccess) k8s_role="Ops" ;;
+    EngineeringReadOnlyAccess) k8s_role="EngView" ;;
+    TiltEngineerAccess) k8s_role="Tilt" ;;
+  esac
+fi
+
+format_account() {
+  local acct="$1"
+  case "$acct" in
+    *-prod) echo "${acct%-prod}:prod" ;;
+    *-production) echo "${acct%-production}:prod" ;;
+    *-stg) echo "${acct%-stg}:stg" ;;
+    *-staging) echo "${acct%-staging}:stg" ;;
+    *-dev) echo "${acct%-dev}:dev" ;;
+    *-management) echo "${acct%-management}:mgmt" ;;
+    *) echo "$acct" ;;
+  esac
+}
+
+if [ -n "$k8s_ctx" ] && [ -n "$aws_profile" ]; then
+  if [ "$k8s_account" = "$aws_account" ]; then
+    display=$(format_account "$aws_account")
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $AWS_ICON $aws_role@$display:$k8s_ns" || echo "$K8S_ICON $AWS_ICON $aws_role@$display"
+  fi
+elif [ -n "$k8s_ctx" ]; then
+  display=$(format_account "$k8s_account")
+  if [ -n "$k8s_role" ]; then
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $k8s_role@$display:$k8s_ns" || echo "$K8S_ICON $k8s_role@$display"
+  else
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $display:$k8s_ns" || echo "$K8S_ICON $display"
+  fi
+elif [ -n "$aws_profile" ]; then
+  display=$(format_account "$aws_account")
+  echo "$AWS_ICON $aws_role@$display"
+fi
+'''
+when = '''
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+aws_account="${aws_profile%%/*}"
+aws_role="${aws_profile##*/}"
+
+if [ -n "$k8s_ctx" ] && [ -n "$aws_profile" ]; then
+  [ "$k8s_account" != "$aws_account" ] && exit 1
+  [ -n "$k8s_role" ] && [ "$k8s_role" != "$aws_role" ] && exit 1
+fi
+
+ctx="${k8s_account:-$aws_account}"
+[ -z "$ctx" ] && exit 1
+case "$ctx" in
+  *-prod*|*-production*|*-prd*|*-management*|*management*) exit 1 ;;
+  *-stg*|*-staging*) exit 0 ;;
+  *) exit 1 ;;
+esac
+'''
+format = '[$output](bold fg:caution_fg bg:caution) '
+
+# SAFE (dev/local) - green background
+[custom.infra_safe]
+command = '''
+K8S_ICON="󱃾"
+AWS_ICON=" "
+
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+k8s_ns=$(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+if [ -n "$aws_profile" ]; then
+  aws_account="${aws_profile%%/*}"
+  aws_role="${aws_profile##*/}"
+  case "$aws_role" in
+    AWSAdministratorAccess) aws_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) aws_role="View" ;;
+    AWSPowerUserAccess) aws_role="Power" ;;
+    SREOperatorAccess) aws_role="Ops" ;;
+    EngineeringReadOnlyAccess) aws_role="EngView" ;;
+    TiltEngineerAccess) aws_role="Tilt" ;;
+  esac
+fi
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+
+if [ -n "$k8s_role" ]; then
+  case "$k8s_role" in
+    AWSAdministratorAccess) k8s_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) k8s_role="View" ;;
+    AWSPowerUserAccess) k8s_role="Power" ;;
+    SREOperatorAccess) k8s_role="Ops" ;;
+    EngineeringReadOnlyAccess) k8s_role="EngView" ;;
+    TiltEngineerAccess) k8s_role="Tilt" ;;
+  esac
+fi
+
+format_account() {
+  local acct="$1"
+  case "$acct" in
+    *-prod) echo "${acct%-prod}:prod" ;;
+    *-production) echo "${acct%-production}:prod" ;;
+    *-stg) echo "${acct%-stg}:stg" ;;
+    *-staging) echo "${acct%-staging}:stg" ;;
+    *-dev) echo "${acct%-dev}:dev" ;;
+    *-management) echo "${acct%-management}:mgmt" ;;
+    *) echo "$acct" ;;
+  esac
+}
+
+if [ -n "$k8s_ctx" ] && [ -n "$aws_profile" ]; then
+  if [ "$k8s_account" = "$aws_account" ]; then
+    display=$(format_account "$aws_account")
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $AWS_ICON $aws_role@$display:$k8s_ns" || echo "$K8S_ICON $AWS_ICON $aws_role@$display"
+  fi
+elif [ -n "$k8s_ctx" ]; then
+  display=$(format_account "$k8s_account")
+  if [ -n "$k8s_role" ]; then
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $k8s_role@$display:$k8s_ns" || echo "$K8S_ICON $k8s_role@$display"
+  else
+    [ -n "$k8s_ns" ] && echo "$K8S_ICON $display:$k8s_ns" || echo "$K8S_ICON $display"
+  fi
+elif [ -n "$aws_profile" ]; then
+  display=$(format_account "$aws_account")
+  echo "$AWS_ICON $aws_role@$display"
+fi
+'''
+when = '''
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+aws_account="${aws_profile%%/*}"
+aws_role="${aws_profile##*/}"
+
+if [ -n "$k8s_ctx" ] && [ -n "$aws_profile" ]; then
+  [ "$k8s_account" != "$aws_account" ] && exit 1
+  [ -n "$k8s_role" ] && [ "$k8s_role" != "$aws_role" ] && exit 1
+fi
+
+ctx="${k8s_account:-$aws_account}"
+[ -z "$ctx" ] && exit 1
+case "$ctx" in
+  *-prod*|*-production*|*-prd*|*-management*|*management*) exit 1 ;;
+  *-stg*|*-staging*) exit 1 ;;
+  *) exit 0 ;;  # Safe: dev or anything else
+esac
+'''
+format = '[$output](bold fg:safe_fg bg:safe) '
+
+# MISMATCH WARNING - when k8s and AWS point to different contexts
+[custom.infra_mismatch]
+command = '''
+K8S_ICON="󱃾"
+AWS_ICON=" "
+
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+k8s_ns=$(kubectl config view --minify -o jsonpath='{..namespace}' 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+aws_account="${aws_profile%%/*}"
+aws_role="${aws_profile##*/}"
+
+case "$aws_role" in
+  AWSAdministratorAccess) aws_role="Admin" ;;
+  AWSReadOnlyAccess|SREReadOnlyAccess) aws_role="View" ;;
+  AWSPowerUserAccess) aws_role="Power" ;;
+  SREOperatorAccess) aws_role="Ops" ;;
+  EngineeringReadOnlyAccess) aws_role="EngView" ;;
+  TiltEngineerAccess) aws_role="Tilt" ;;
+esac
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+
+if [ -n "$k8s_role" ]; then
+  case "$k8s_role" in
+    AWSAdministratorAccess) k8s_role="Admin" ;;
+    AWSReadOnlyAccess|SREReadOnlyAccess) k8s_role="View" ;;
+    AWSPowerUserAccess) k8s_role="Power" ;;
+    SREOperatorAccess) k8s_role="Ops" ;;
+    EngineeringReadOnlyAccess) k8s_role="EngView" ;;
+    TiltEngineerAccess) k8s_role="Tilt" ;;
+  esac
+fi
+
+format_account() {
+  local acct="$1"
+  case "$acct" in
+    *-prod) echo "${acct%-prod}:prod" ;;
+    *-production) echo "${acct%-production}:prod" ;;
+    *-stg) echo "${acct%-stg}:stg" ;;
+    *-staging) echo "${acct%-staging}:stg" ;;
+    *-dev) echo "${acct%-dev}:dev" ;;
+    *-management) echo "${acct%-management}:mgmt" ;;
+    *) echo "$acct" ;;
+  esac
+}
+
+k8s_display=$(format_account "$k8s_account")
+aws_display=$(format_account "$aws_account")
+
+if [ -n "$k8s_role" ]; then
+  k8s_part="$K8S_ICON $k8s_role@$k8s_display"
+else
+  k8s_part="$K8S_ICON $k8s_display"
+fi
+[ -n "$k8s_ns" ] && k8s_part="$k8s_part:$k8s_ns"
+aws_part="$AWS_ICON $aws_role@$aws_display"
+
+echo "$k8s_part ⚠ $aws_part"
+'''
+when = '''
+k8s_ctx=$(kubectl config current-context 2>/dev/null)
+aws_profile="${AWS_PROFILE:-$AWS_DEFAULT_PROFILE}"
+
+[ -z "$k8s_ctx" ] || [ -z "$aws_profile" ] && exit 1
+
+k8s_account="${k8s_ctx%%/*}"
+k8s_role="${k8s_ctx##*/}"
+[ "$k8s_role" = "$k8s_ctx" ] && k8s_role=""
+aws_account="${aws_profile%%/*}"
+aws_role="${aws_profile##*/}"
+
+[ "$k8s_account" != "$aws_account" ] && exit 0
+[ -n "$k8s_role" ] && [ "$k8s_role" != "$aws_role" ] && exit 0
+exit 1
+'''
+format = '[$output](bold fg:danger_fg bg:danger) '
+
+# === LOCAL CONTEXT ===
+
+[fill]
+symbol = ' '
+
+[cmd_duration]
+min_time = 2_000
+format = '[$duration]($style)'
+style = 'fg:muted'
+show_milliseconds = false
+
+[directory]
+style = 'bold fg:text'
+format = '[$path]($style) '
+truncation_length = 3
+truncation_symbol = '…/'
+
+[git_branch]
+symbol = ''
+format = '[$symbol $branch]($style) '
+style = 'fg:muted'
+truncation_length = 20
+
+[git_status]
+format = '[$all_status$ahead_behind]($style) '
+style = 'fg:caution'
+
+# === LANGUAGE VERSIONS (minimal, muted) ===
+
+[golang]
+format = '[$symbol$version]($style) '
+style = 'fg:muted'
+
+[nodejs]
+format = '[$symbol$version]($style) '
+style = 'fg:muted'
+detect_files = ["package.json", ".node-version", "!bunfig.toml", "!bun.lockb"]
+
+[daml]
+format = '[$symbol$version]($style) '
+style = 'fg:muted'
+
+[rust]
+format = '[$symbol$version]($style) '
+style = 'fg:muted'
+
+[python]
+format = '[$symbol$version]($style) '
+style = 'fg:muted'
+
+[direnv]
+disabled = false
+format = '[$symbol$allowed]($style) '
+style = 'fg:muted'
+
+# === PROMPT CHARACTER ===
+
+[line_break]
+disabled = false
+
+[character]
+success_symbol = '[❯](bold fg:safe)'
+error_symbol = '[❯](bold fg:danger)'

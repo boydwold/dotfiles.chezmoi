@@ -107,26 +107,24 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
 
-# Include local settings from .gitlocal
-# Requires Git 1.7.10
-# Setup:
-#   git config -f ~/.gitlocal user.email "your@email.com"
-#   git config -f ~/.gitlocal user.name "Name Lastname"
-# Example .gitlocal:
-# [user]
-#   name = Denys Dovhan
-#   email = denysdovhan@gmail.com
-[include]
-  path = ~/.gitlocal
+# Default: personal identity (used everywhere except work-lendos)
 [user]
-	email = 107568704+rpcaptain@users.noreply.github.com
-	name = Boyd Wold
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7xS8O8m3BY/Za2uD4pd8YLwMmoQpaM2YLwvpzztp5P
+    email = boydwold@gmail.com
+    name = Boyd Wold
+
+# Default: route to personal SSH key
+[url "git@github-personal:"]
+    insteadOf = git@github.com:
+
+# Work override for ~/projects/work-lendos/
+[includeIf "gitdir:~/projects/work-lendos/"]
+    path = ~/.gitconfig-work
+
 [credential]
-	helper = store
+    helper = store
+
 [gpg]
-	format = ssh
+    format = ssh
+
 [gpg "ssh"]
-	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
-[commit]
-	gpgsign = true
+    program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
