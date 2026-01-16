@@ -1,0 +1,112 @@
+fpath=(~/.daml/zsh $fpath)
+
+# =============================================================================
+# ZSH CONFIGURATION
+# =============================================================================
+
+# --- Basic ZSH Options ---
+setopt HIST_IGNORE_ALL_DUPS      # Don't save duplicate commands in history
+setopt INTERACTIVE_COMMENTS      # Allow comments when pasting commands
+setopt SHARE_HISTORY            # Share history between multiple zsh sessions
+setopt APPEND_HISTORY           # Append to history file rather than overwrite
+
+# --- History Settings ---
+HISTSIZE=10000                  # Lines of history to keep in memory
+SAVEHIST=10000                  # Lines of history to save to file
+HISTFILE=~/.zsh_history        # History file location
+
+# =============================================================================
+# ENVIRONMENT SETUP
+# =============================================================================
+
+# --- 1Password SSH Agent ---
+# Must be set BEFORE other tools that use SSH
+export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+
+# --- Homebrew ---
+# Initialize Homebrew environment
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# --- Local bin directory ---
+# Add local bin to PATH for user-installed utilities
+PATH="$HOME/.local/bin:$PATH"
+
+# =============================================================================
+# COMPLETION SYSTEM
+# =============================================================================
+
+# --- Initialize completions ---
+autoload -Uz compinit
+compinit
+
+# --- Case-insensitive completions ---
+# Makes 'cd doc' complete to 'cd Documents', 'ssh sin' to 'ssh sin920', etc.
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+
+# --- Additional completion enhancements ---
+zstyle ':completion:*' menu select                    # Use menu selection for completions
+zstyle ':completion:*' list-colors ''                # Use colors in completion lists
+zstyle ':completion:*:descriptions' format '%B%d%b'  # Bold section descriptions
+
+# =============================================================================
+# PROMPT AND UI
+# =============================================================================
+
+# --- Starship Prompt ---
+# Custom prompt configuration (requires ~/.config/starship.toml)
+eval "$(starship init zsh)"
+
+# =============================================================================
+# COMMAND LINE TOOLS
+# =============================================================================
+
+# --- FZF (Fuzzy Finder) ---
+# Enable fuzzy finding for command history and file navigation
+source <(fzf --zsh)
+
+# =============================================================================
+# ALIASES
+# =============================================================================
+
+# --- File Listing (using eza for better colors/icons) ---
+alias ll='eza -la --icons'      # Detailed list with icons
+alias la='eza -a --icons'       # Show all files with icons
+alias lt='eza --tree --level=2' # Tree view, 2 levels deep
+alias ltr='eza --tree --level=2 --long' # Tree view with details
+
+# --- Navigation ---
+alias ..='cd ..'                # Go up one directory
+alias ...='cd ../..'            # Go up two directories
+
+# --- Enhanced Commands ---
+alias grep='grep --color=auto'  # Colorize grep output
+
+# --- Chezmoi (dotfile management) ---
+alias cz='chezmoi'
+alias cza='chezmoi apply'
+alias czd='chezmoi diff'
+alias cze='chezmoi edit'
+alias czcd='chezmoi cd'
+alias czs='chezmoi status'
+
+# =============================================================================
+# ZSH PLUGINS (Load last for best compatibility)
+# =============================================================================
+
+# --- Autosuggestions ---
+# Shows suggestions based on command history as you type
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# --- Syntax Highlighting ---
+# Highlights commands as you type (must be loaded LAST)
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+
+# Set tab title to hostname
+function set_tab_title() {
+    echo -ne "\033]0;${HOST}\007"
+}
+precmd_functions+=(set_tab_title)
+
+# Added by Antigravity
+export PATH="/Users/boydwold/.antigravity/antigravity/bin:$PATH"
