@@ -1,2 +1,0 @@
-NUMBER = 42
-print(NUMBER)

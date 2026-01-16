@@ -1,5 +1,0 @@
-list(0 for y in list(range(10)))
-tuple(0 for y in list(range(10)))
-sum(y**2 for y in list(range(10)))
-max(y**2 for y in list(range(10)))
-min(y**2 for y in list(range(10)))

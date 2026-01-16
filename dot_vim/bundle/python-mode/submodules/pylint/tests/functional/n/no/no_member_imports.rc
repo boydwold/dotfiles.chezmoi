@@ -1,3 +1,0 @@
-[TYPECHECK]
-ignored-modules=argparse,xml.etree.,collections.abc*
-ignored-classes=sys*,optparse.Values,Option

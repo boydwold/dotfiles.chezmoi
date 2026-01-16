@@ -1,5 +1,0 @@
-[main]
-load-plugins=pylint.extensions.docparams
-
-[Parameter_documentation]
-no-docstring-rgx=^(?!__init__$)_

@@ -1,1 +1,0 @@
-raise Exception("Goodbye world !")

@@ -1,1 +1,0 @@
-- `PEP 570 <https://peps.python.org/pep-570/>`_

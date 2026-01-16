@@ -1,1 +1,0 @@
-- Documentation: `str.strip([chars]) <https://docs.python.org/3/library/stdtypes.html?highlight=strip#str.strip>`_

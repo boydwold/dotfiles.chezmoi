@@ -1,2 +1,0 @@
-- `Format String Syntax <https://docs.python.org/3/library/string.html#formatstrings>`_
-- `PyFormat <https://pyformat.info/>`_

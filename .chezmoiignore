@@ -1,3 +1,8 @@
+# Repo files (don't deploy to home)
+install.sh
+README.md
+LICENSE
+
 # System files
 .DS_Store
 .Trash

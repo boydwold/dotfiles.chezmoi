@@ -1,1 +1,0 @@
-- `subprocess.run documentation <https://docs.python.org/3/library/subprocess.html#subprocess.run>`_

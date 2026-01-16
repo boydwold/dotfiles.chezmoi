@@ -1,3 +1,0 @@
-[main]
-load-plugins = pylint.extensions.docparams
-accept-no-param-doc = false

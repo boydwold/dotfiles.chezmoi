@@ -1,0 +1,45 @@
+# Added by OrbStack: 'orb' SSH host for Linux machines
+# This only works if it's at the top of ssh_config (before any Host blocks).
+# This won't be added again if you remove it.
+Include ~/.orbstack/ssh/config
+Host *.ts.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+
+Host pve00.humpback-pangolin.ts.net
+  User boydwold
+  HostName pve00.humpback-pangolin.ts.net
+
+# Synology
+Host sin920
+  HostName sin920
+  User boyd
+  IdentityAgent ~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock
+  SetEnv TERM=xterm-256color
+
+# Work GitHub account (rpcaptain)
+Host github-work
+  HostName github.com
+  User git
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519-work.pub
+
+# Personal GitHub account (boydwold)
+Host github-personal
+  HostName github.com
+  User git
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519-personal.pub
+
+# Alias for backward compatibility with workgit
+Host workgit
+  HostName github.com
+  User git
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519-work.pub
+
+Host *
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

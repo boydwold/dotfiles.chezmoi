@@ -1,3 +1,0 @@
-[MAIN]
-py-version=3.8
-load-plugins=pylint.extensions.code_style

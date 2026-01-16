@@ -1,1 +1,0 @@
-- In **patch release** (``1.2.3``), we only fix false positives and crashes.

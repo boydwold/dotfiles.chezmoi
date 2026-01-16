@@ -111,6 +111,10 @@
 [user]
     email = boydwold@gmail.com
     name = Boyd Wold
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDndahlyCw8zSfQkmScBxNP4JjJwRymqOcnlJuAIzfgW
+
+[commit]
+    gpgsign = true
 
 # Default: route to personal SSH key
 [url "git@github-personal:"]
