@@ -1,0 +1,12 @@
+#!/bin/bash
+# Reload spellar-webhook service when plist changes
+# hash: {{ include "Library/LaunchAgents/com.boydwold.spellar-webhook.plist.tmpl" | sha256sum }}
+
+PLIST="$HOME/Library/LaunchAgents/com.boydwold.spellar-webhook.plist"
+
+if [[ -f "$PLIST" ]]; then
+    echo "Reloading spellar-webhook service..."
+    launchctl unload "$PLIST" 2>/dev/null || true
+    launchctl load "$PLIST"
+    echo "Done. Check status with: launchctl list | grep spellar"
+fi

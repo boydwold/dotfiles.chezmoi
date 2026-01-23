@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.boydwold.spellar-webhook</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>{{ .chezmoi.homeDir }}/.local/bin/spellar-webhook.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>OBSIDIAN_VAULT_PATH</key>
+        <string>{{ .spellar.vault_path }}</string>
+        <key>WEBHOOK_SECRET</key>
+        <string>{{ .spellar.webhook_secret }}</string>
+        <key>LOG_REQUESTS</key>
+        <string>true</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/spellar-webhook.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/spellar-webhook.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>{{ .chezmoi.homeDir }}/.local/bin</string>
+</dict>
+</plist>

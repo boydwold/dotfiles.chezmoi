@@ -2,3 +2,7 @@ encryption = "age"
 [age]
     identity = "~/.config/chezmoi/key.txt"
     recipient = "age193wd0hfuhtjfsunlq3c83s8m93pde442dkcn7lmj3lspeekm9g7stwutrl"
+
+[data.spellar]
+    vault_path = {{ promptString "Obsidian vault path for Spellar meetings" | quote }}
+    webhook_secret = {{ promptString "Spellar webhook secret" | quote }}
