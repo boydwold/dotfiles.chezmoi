@@ -246,6 +246,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
         # === 1. SUMMARY FILE (most important) ===
         summary_note = f"""---
+processed: false
 title: "{title}"
 date: {date_str}
 time: "{time_str}"
