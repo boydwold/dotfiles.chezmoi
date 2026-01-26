@@ -1,27 +1,9 @@
-# Repo files (don't deploy to home)
-install.sh
-README.md
-LICENSE
-
-# System files
-.DS_Store
-.Trash
-.cache/
-.tmp/
-.vimswap
-.vimbackup
-.zcompdump*
-
-# Personal directories
-Documents/
-Downloads/
-Pictures/
-Music/
-Movies/
-
-key.txt.age
-.DS_Store
-**/.DS_Store
-.DS_Store
-**/.DS_Store
-.aws/cli/cache
+.claude/debug/**
+.claude/history.jsonl
+.claude/plugins/**
+.claude/projects/**
+.claude/settings.json
+.claude/settings.local.json
+.claude/shell-snapshots/**
+.claude/statsig/**
+.claude/todos/**
