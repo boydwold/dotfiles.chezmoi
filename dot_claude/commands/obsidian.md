@@ -318,10 +318,31 @@ When user says "process [meeting]" or "process my 1:1 with [name]":
 ## Task Format
 
 ```markdown
+# Open tasks
 - [ ] Task description 📅 YYYY-MM-DD
-- [ ] 📤 Delegated task #delegate/alejandro 📅 YYYY-MM-DD
-- [ ] ⏳ Their commitment #waiting/john 📅 YYYY-MM-DD
+- [ ] 📤 Delegated task #delegate/name 📅 YYYY-MM-DD
+- [ ] ⏳ Their commitment #waiting/name 📅 YYYY-MM-DD
+
+# Completed tasks
+- [x] Task description 📅 YYYY-MM-DD ✅ YYYY-MM-DD
+- [x] Task description ❌ Reason for not doing
+
+# Candidate notes - use Dataview to pull tasks from interviews
+### From Interviews
+\`\`\`dataview
+TASK
+FROM "Archive/Meetings/Notes"
+WHERE contains(file.name, "Candidate Name") AND !completed
+\`\`\`
 ```
+
+**Task rules:**
+- Due date goes at end with 📅 emoji
+- Completed date uses ✅ emoji after due date
+- Cancelled/skipped tasks use ❌ with reason
+- #waiting/name for things others committed to do
+- #delegate/name with 📤 for things you asked someone to do
+- Don't duplicate tasks - use Dataview to pull from meeting notes
 
 ## Creating New Person Notes
 
