@@ -341,8 +341,12 @@ WHERE contains(file.name, "Candidate Name") AND !completed
 - Cancelled/skipped tasks use ❌ with reason
 - #waiting/name with ⏳ for things others committed to do
 - #delegate/name with 📤 for things you asked someone to do
-- Candidate-specific tasks go directly in Tasks section
-- Dataview query in same Tasks section pulls incomplete tasks from meeting notes (no subsection)
+
+**Candidate notes:**
+- Tasks live in meeting notes, NOT in candidate notes
+- Dataview query pulls incomplete tasks from meeting notes automatically
+- To complete a task, mark it done in the meeting note
+- Do NOT manually add/duplicate tasks to candidate notes
 
 ## Creating New Person Notes
 
