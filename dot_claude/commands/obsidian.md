@@ -326,6 +326,13 @@ When user says "process [meeting]" or "process my 1:1 with [name]":
 # Completed tasks
 - [x] Task description 📅 YYYY-MM-DD ✅ YYYY-MM-DD
 - [x] Task description 📅 YYYY-MM-DD ❌ Reason for not doing
+
+# Candidate notes - Dataview pulls incomplete tasks from meetings
+\`\`\`dataview
+TASK
+FROM "Archive/Meetings/Notes"
+WHERE contains(file.name, "Candidate Name") AND !completed
+\`\`\`
 ```
 
 **Task rules:**
@@ -334,7 +341,8 @@ When user says "process [meeting]" or "process my 1:1 with [name]":
 - Cancelled/skipped tasks use ❌ with reason
 - #waiting/name with ⏳ for things others committed to do
 - #delegate/name with 📤 for things you asked someone to do
-- When processing interviews, add tasks directly to the candidate note's Tasks section
+- Candidate-specific tasks go directly in Tasks section
+- Dataview query in same Tasks section pulls incomplete tasks from meeting notes (no subsection)
 
 ## Creating New Person Notes
 
