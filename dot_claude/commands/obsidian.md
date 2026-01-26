@@ -1,6 +1,6 @@
-# Quick Obsidian Capture
+# Obsidian Assistant
 
-Quickly add tasks, notes, or process meetings in my Obsidian vault.
+Help with tasks, focus sessions, planning, and note management in my Obsidian vault.
 
 ## Vault Location
 
@@ -19,6 +19,10 @@ Quickly add tasks, notes, or process meetings in my Obsidian vault.
 
 1. **Read relevant files first** - Don't assume paths exist
 2. **Detect the intent:**
+   - **"focus" / "work" / "25 min" / "pomodoro"** → Start Focus Session (see below)
+   - **"what now" / "next" / "what should I do"** → Quick Prioritization (see below)
+   - **"plan" / "think through" / "break down"** → Planning Mode (see below)
+   - **"tech interview prep for [candidate]"** → Generate Tech Interview Package (see below)
    - **"setup [name] as a person"** → Create a Person Note (see Person Setup below)
    - **"setup [name] as a candidate"** → Create a Candidate Note (see Candidate Setup below)
    - **"process [meeting/1:1]"** → Process a meeting (see Meeting Processing below)
@@ -35,6 +39,162 @@ Quickly add tasks, notes, or process meetings in my Obsidian vault.
 | My task | `- [ ] Task description` | `- [ ] Review PR` |
 | Delegated | `- [ ] 📤 Task #delegate/name` | `- [ ] 📤 Schedule demo #delegate/alejandro` |
 | Waiting on | `- [ ] ⏳ What they committed to #waiting/name` | `- [ ] ⏳ Send architecture doc #waiting/john` |
+
+---
+
+## Focus Session Workflow
+
+When user says "focus", "work", "25 minutes", "pomodoro", or similar:
+
+1. **Gather context** by reading:
+   - Today's daily note (`Journal/Daily/YYYY-MM-DD.md`)
+   - Task Dashboard (`Active/Task Dashboard.md`)
+   - Active project notes with tasks (grep for `- [ ]` in `Active/`)
+   - Any specific project mentioned by user
+
+2. **Identify priority tasks** considering:
+   - Due dates (📅 tags) - overdue or due today first
+   - Blocking others (#delegate tasks that need my input first)
+   - Quick wins vs deep work - match to available time
+   - Context mentioned by user (e.g., "hiring focus" → candidate tasks)
+
+3. **Present the session:**
+   ```
+   🍅 Focus Session (25 min)
+
+   I found X actionable tasks. Here's your first:
+
+   **Task 1:** [Task description]
+   📍 From: [Source note]
+
+   Say "done" when finished, "skip" to move on, or "stop" to end session.
+   ```
+
+4. **On "done":**
+   - Mark task complete in the source file (change `- [ ]` to `- [x]`)
+   - Present next task
+   - Track completed count
+
+5. **On "skip":**
+   - Move to next task without marking complete
+   - Optionally ask why (to reschedule or delegate)
+
+6. **On "stop" or session end:**
+   - Summarize what was accomplished
+   - List remaining tasks for later
+   - Optionally log to daily note under `## Focus Sessions`
+
+---
+
+## Quick Prioritization Workflow
+
+When user says "what now", "next", "what should I do":
+
+1. **Quick scan** of:
+   - Today's daily note for scheduled items
+   - Task Dashboard for overdue/due-today
+   - Active projects with imminent deadlines
+
+2. **Recommend ONE task** with brief rationale:
+   ```
+   **Right now:** [Task]
+   📍 [Source] | ⏰ [Why now - due date, blocking, etc.]
+
+   Want to start a focus session, or just tackle this one?
+   ```
+
+---
+
+## Planning Mode Workflow
+
+When user says "plan", "think through", "break down" + [project/topic]:
+
+1. **Gather context** on the project:
+   - Read relevant project notes
+   - Check related meeting notes
+   - Review existing tasks
+
+2. **Interactive planning:**
+   - Ask clarifying questions about goals/constraints
+   - Help break down into concrete tasks
+   - Identify dependencies and blockers
+   - Suggest priorities and sequence
+
+3. **Output options:**
+   - Add tasks to existing project note
+   - Create new project note with plan
+   - Just discuss without writing
+
+---
+
+## Tech Interview Prep Workflow
+
+When user says "tech interview prep for [candidate]":
+
+Add a Tech Interview Prep section to the candidate note + generate Teams message.
+
+1. **Gather context:**
+   - Read candidate note from `Active/LendOS/HR/Candidates/`
+   - Read screening interview notes from `Archive/Meetings/Notes/`
+   - Read screening transcript if available
+
+2. **Ask clarifying questions:**
+   - What level? (mid/senior/lead)
+   - What team/focus? (value team frontend, value team backend, DAML, DevOps)
+   - What impressed you most from screening?
+   - What needs probing in technical?
+   - DAML homework: required or optional?
+
+3. **Add section to candidate note** (before Tasks section):
+
+```markdown
+## Tech Interview Prep
+
+**Position:** [Level] Engineer, [Team] ([Focus])
+
+### Strengths to Validate
+| Area | Evidence | Question |
+|------|----------|----------|
+| [Strength] | [What they claimed] | [Question to validate] |
+
+### Gaps to Probe
+| Area | Concern | Question |
+|------|---------|----------|
+| [Gap] | [Why it matters] | [Question to assess] |
+
+### Testing Notes (Rafa)
+- [Testing experience + areas to probe]
+
+### DAML Homework
+[Required/Optional] - [reason]
+```
+
+4. **Generate Teams message** (plain text, includes all the info inline):
+
+```
+Tech Interview - [Candidate Name]
+
+@Bosko - Candidate ready for technical. Recruiter: [Will via ext-lendos-developrecruit].
+
+[Name] is a [level] candidate for [team]—[1 sentence background]. I liked [highlight]. Probe [gaps].
+
+@Rafaella - join for testing. [Testing note].
+@Jake - [personal note if relevant, e.g., location]
+
+**Strengths to validate:**
+- [Strength 1] — [sample question]
+- [Strength 2] — [sample question]
+
+**Gaps to probe:**
+- [Gap 1] — [sample question]
+- [Gap 2] — [sample question]
+
+**DAML homework:** [Required/Optional]
+```
+
+5. **Output:** Present Teams message (ready to paste), confirm section added to candidate note
+
+---
 
 ## Person Setup Workflow
 
@@ -97,7 +257,7 @@ When user says "setup [name] as a candidate":
 
 5. **Create Candidate Note** at `Active/LendOS/HR/Candidates/[Full Name].md`:
    - Use template structure from `Templates/candidate.md`
-   - Populate frontmatter: stage, skills, dates, source, location
+   - Populate frontmatter: stage, skills, dates, source, location, salary
    - Fill in Summary, Background, Strengths, Concerns from interviews
    - Add interview history table with links to meeting notes
    - Add follow-up tasks
