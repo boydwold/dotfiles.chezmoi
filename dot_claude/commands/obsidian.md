@@ -38,7 +38,8 @@ Help with tasks, focus sessions, planning, and note management in my Obsidian va
 |------|--------|---------|
 | My task | `- [ ] Task description` | `- [ ] Review PR` |
 | Delegated | `- [ ] 📤 Task #delegate/name` | `- [ ] 📤 Schedule demo #delegate/alejandro` |
-| Waiting on | `- [ ] ⏳ What they committed to #waiting/name` | `- [ ] ⏳ Send architecture doc #waiting/john` |
+| Waiting on (tag) | `- [ ] ⏳ What they committed to #waiting/name` | `- [ ] ⏳ Send architecture doc #waiting/john` |
+| Waiting on (status) | `- [w] Task waiting on external` | `- [w] Waiting for API access` |
 
 ---
 
@@ -341,6 +342,13 @@ WHERE contains(file.name, "Candidate Name") AND !completed
 - Cancelled/skipped tasks use ❌ with reason
 - #waiting/name with ⏳ for things others committed to do
 - #delegate/name with 📤 for things you asked someone to do
+
+**Status markers:**
+- `[ ]` Todo
+- `[x]` Done
+- `[/]` In Progress
+- `[-]` Cancelled
+- `[w]` Waiting (blocked on someone else)
 
 **Candidate notes:**
 - Tasks live in meeting notes, NOT in candidate notes
