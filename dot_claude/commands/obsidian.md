@@ -38,8 +38,8 @@ Help with tasks, focus sessions, planning, and note management in my Obsidian va
 |------|--------|---------|
 | My task | `- [ ] Task description` | `- [ ] Review PR` |
 | Delegated | `- [ ] 📤 Task #delegate/name` | `- [ ] 📤 Schedule demo #delegate/alejandro` |
-| Waiting on (tag) | `- [ ] ⏳ What they committed to #waiting/name` | `- [ ] ⏳ Send architecture doc #waiting/john` |
-| Waiting on (status) | `- [w] Task waiting on external` | `- [w] Waiting for API access` |
+| Waiting (status) | `- [w] Task blocked waiting on something` | `- [w] Waiting for API access approval` |
+| Waiting (tag) | `- [ ] ⏳ Their commitment #waiting/name` | `- [ ] ⏳ Send architecture doc #waiting/john` |
 
 ---
 
